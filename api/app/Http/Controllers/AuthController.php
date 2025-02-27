@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 //controller para autenticação
 
+
+
+
 /**
- * @OA\Info(
- *      title="API Technology Solutions",
- *      version="1.0.0",
- *      description="Documentação da API de onboarding de colaboradores",
- *      @OA\Contact(
- *          email="suporte@empresa.com"
- *      )
+ * @OA\Tag(
+ *     name="Autenticação",
+ *     description="APIs para gerenciamento de usuários"
  * )
  */
 
@@ -65,12 +64,7 @@ class AuthController extends Controller
     //método para login
     public function login(Request $request)
     {
-        $request->validate([
-            'cpf' => 'required|string|size:14',
-            'password' => 'required|string|min:8',
-        ]);
-
-        try {
+                try {
             $data = $this->authService->login($request->cpf, $request->password);
             return response()->json($data);
         } catch (ValidationException $e) {
@@ -84,7 +78,7 @@ class AuthController extends Controller
  *      tags={"Autenticação"},
  *      summary="Faz logout do usuário",
  *      description="Revoga o token de autenticação do usuário",
- *      security={{"passport":{}}},
+ *     security={{"bearerAuth":{}}},
  *      @OA\Response(
  *          response=200,
  *          description="Logout realizado com sucesso",

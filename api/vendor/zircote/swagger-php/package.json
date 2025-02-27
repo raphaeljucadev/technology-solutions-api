@@ -7,7 +7,10 @@
     "redocly": "redocly"
   },
   "devDependencies": {
-    "@stoplight/spectral-cli": "^6",
-    "@redocly/cli": "^1.30"
+    "@redocly/cli": "^1.30",
+    "@stoplight/spectral-cli": "^6"
+  },
+  "dependencies": {
+    "swagger-php-tools": "file:"
   }
 }

@@ -231,7 +231,7 @@ return [
 
                     'passport' => []
                     */
-                    'passport' => [
+                    'bearerAuth' => [
                         'type' => 'http',
                         'scheme' => 'bearer',
                     ],

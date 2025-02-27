@@ -3,18 +3,25 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 
+Route::prefix('api')->group(function () {
 
-//criação de rotas para login e logout
-Route::post('/login', [AuthController::class, 'login']);
+    //criação de rotas para login
+    Route::post('/login', [AuthController::class, 'login']);
 
-//uso do middleware para proteger as rotas
-Route::middleware('auth:api')->group(function () {
+     //criação de rotas para usuários
+    Route::post('/users', [UserController::class, 'store']);
 
-    // criação de rota para logout
-    Route::post('/logout', [AuthController::class, 'logout']);
-
+    // Rotas protegidas
+    Route::middleware('auth:api')->group(function () {
+        // criação de rota para logout
+        Route::post('/logout', [AuthController::class, 'logout']);
+        //criação de rota para alterar users
+        Route::put('/users/{id}', [UserController::class, 'update']);
+        //alterar senha
+        Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+    });
 });
-
 
