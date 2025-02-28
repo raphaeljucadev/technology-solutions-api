@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\TelefoneController;
+use App\Http\Controllers\UserTypeController;
 
 
 
@@ -41,6 +42,11 @@ Route::prefix('api')->group(function () {
         Route::post('/telefone', [TelefoneController::class, 'store']);
         Route::get('/telefone/{id}', [TelefoneController::class, 'show']);
         Route::put('/telefone', [TelefoneController::class, 'update']);
+
+        //criação de rotas para tipos de usuários
+        Route::get('/user-types', [UserTypeController::class, 'index']);
+        Route::get('/user-types/{id}', [UserTypeController::class, 'show']);
+        Route::post('/user-types', [UserTypeController::class, 'store']);
 
 
     });

@@ -698,6 +698,166 @@
                     }
                 ]
             }
+        },
+        "/api/user-types": {
+            "get": {
+                "tags": [
+                    "Tipos de Usuário"
+                ],
+                "summary": "Lista todos os tipos de usuário",
+                "description": "Listar todos os tipos de usuário",
+                "operationId": "b813476289617c881dfde38f17def4ca",
+                "responses": {
+                    "200": {
+                        "description": "Lista de tipos de usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Administrador"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tipos de Usuário"
+                ],
+                "summary": "Cria um novo tipo de usuário",
+                "description": "Criar um novo tipo de usuário",
+                "operationId": "70f99e4f53ef80a1960d9a964778f977",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Vendedor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tipo de usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Vendedor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O campo nome é obrigatório."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user-types/{id}": {
+            "get": {
+                "tags": [
+                    "Tipos de Usuário"
+                ],
+                "summary": "Exibe um tipo de usuário pelo ID",
+                "description": "Exibir um tipo de usuário específico",
+                "operationId": "fc635d009775c7b94ffc33730c19b723",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do tipo de usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do tipo de usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Administrador"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tipo de usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User type not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -726,6 +886,10 @@
         {
             "name": "Usuários",
             "description": "APIs para gerenciamento de usuários"
+        },
+        {
+            "name": "Tipos de Usuário",
+            "description": "APIs para gerenciamento de tipos de usuário"
         }
     ],
     "security": [
