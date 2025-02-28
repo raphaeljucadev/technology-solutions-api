@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
 
+
 Route::prefix('api')->group(function () {
 
     //criação de rotas para login
@@ -13,6 +14,10 @@ Route::prefix('api')->group(function () {
 
      //criação de rotas para usuários
     Route::post('/users', [UserController::class, 'store']);
+
+
+
+
 
     // Rotas protegidas
     Route::middleware('auth:api')->group(function () {
@@ -23,5 +28,8 @@ Route::prefix('api')->group(function () {
         //alterar senha
         Route::post('/password/reset', [AuthController::class, 'resetPassword']);
     });
+
+
+
 });
 

@@ -10,6 +10,10 @@ use App\Rules\CpfRule;
 use App\Rules\StrongPasswordRule;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Passport\Client;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 
 class AuthService
 {
@@ -19,7 +23,10 @@ class AuthService
     $validator = Validator::make(['cpf' => $cpf], ['cpf' => new CpfRule()]);
 
     if ($validator->fails()) {
-        throw ValidationException::withMessages(['cpf' => 'O CPF informado é inválido.']);
+
+        throw new HttpResponseException(
+            response()->json(['message' => 'O CPF informado é inválido.'], 401)
+        );
     }
 
 
@@ -28,15 +35,22 @@ class AuthService
 
     // Verificar se o usuário existe e se a senha está correta
     if (!$user || !Hash::check($password, $user->password)) {
-        throw ValidationException::withMessages(['message' => 'Credenciais inválidas']);
+        throw new HttpResponseException(
+            response()->json(['message' => 'Credenciais inválidas'], 401)
+        );
     }
+
 
     // Revogar tokens antigos
     $user->tokens()->delete();
+    $client = Client::where('password_client', true)->first();
 
-    $personalAccessClient = Client::where('personal_access_client', true)->first();
 
-    $token = $user->createToken('auth_token', ['*'], $personalAccessClient->id)->accessToken;
+    if (!$client) {
+        return response()->json(['message' => 'Cliente OAuth não encontrado'], 500);
+    }
+
+    $token = $user->createToken('auth_token', ['*'], $client->id)->accessToken;
 
     return [
         'token' => $token,
@@ -48,15 +62,24 @@ class AuthService
         ]
     ];
 }
-    public function logout($user)
-    {
-        $user->token()->revoke();
+public function logout()
+{
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(['message' => 'Usuário não autenticado'], 401);
     }
+
+    // Revogar todos os tokens do usuário autenticado
+    $user->tokens()->delete();
+
+    return response()->json(['message' => 'Logout realizado com sucesso']);
+}
 
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'cpf' => ['required', 'string', 'size:14', 'unique:users', new CpfRule()],
+            'cpf' => ['required', 'string', 'size:14', new CpfRule()],
             'password' => ['required', 'string', new StrongPasswordRule()],
         ]);
 

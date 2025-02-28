@@ -98,4 +98,34 @@ public function logout()
 
     return response()->json(['message' => 'Logout realizado com sucesso']);
 }
+ /**
+     * @OA\Post(
+     *      path="/api/password/reset",
+     *      tags={"Autenticação"},
+     *      summary="Redefinir senha",
+     *      description="Permite redefinir a senha de um usuário com um CPF válido",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"cpf", "password"},
+     *              @OA\Property(property="cpf", type="string", example="529.982.247-25"),
+     *              @OA\Property(property="password", type="string", format="password", example="NovaSenha@123")
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Senha alterada com sucesso",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Senha alterada com sucesso.")
+     *          )
+     *      ),
+     *      @OA\Response(response=422, description="Erro na validação dos dados"),
+     *      @OA\Response(response=404, description="Usuário não encontrado"),
+     * )
+     */
+    public function resetPassword(Request $request)
+    {
+        return $this->authService->resetPassword($request);
+    }
+
 }
