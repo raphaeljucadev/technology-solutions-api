@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\TelefoneController;
 
 
 
@@ -34,6 +35,12 @@ Route::prefix('api')->group(function () {
         Route::post('/endereco', [AddressController::class, 'store']);
         Route::get('/endereco/{id}', [AddressController::class, 'show']);
         Route::put('/endereco/{id}', [AddressController::class, 'update']);
+
+        //criação de rotas para telefones
+
+        Route::post('/telefone', [TelefoneController::class, 'store']);
+        Route::get('/telefone/{id}', [TelefoneController::class, 'show']);
+        Route::put('/telefone', [TelefoneController::class, 'update']);
 
 
     });

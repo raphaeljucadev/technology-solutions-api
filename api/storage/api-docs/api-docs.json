@@ -352,6 +352,171 @@
                 }
             }
         },
+        "/api/telefone": {
+            "put": {
+                "tags": [
+                    "Telefone"
+                ],
+                "summary": "Atualiza um ou mais telefones existentes",
+                "operationId": "334469a92dadd77c5a758537a190e286",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "telefones"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "telefones": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "id",
+                                                "ddd",
+                                                "celular"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "ddd": {
+                                                    "type": "string",
+                                                    "example": "21"
+                                                },
+                                                "celular": {
+                                                    "type": "string",
+                                                    "example": "92345-6789"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Telefones atualizados com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Telefone"
+                ],
+                "summary": "Cria um ou mais telefones para um usuário",
+                "operationId": "5b6105486933c80db5826a6396dad670",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "telefones"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "telefones": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "ddd": {
+                                                    "type": "string",
+                                                    "example": "11"
+                                                },
+                                                "celular": {
+                                                    "type": "string",
+                                                    "example": "98765-4321"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Telefones criados com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/telefone/{id}": {
+            "get": {
+                "tags": [
+                    "Telefone"
+                ],
+                "summary": "Busca um telefone pelo ID",
+                "operationId": "c7ccf100cb7890f87f76baa9ce3fba44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do telefone",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Telefone encontrado"
+                    },
+                    "404": {
+                        "description": "Telefone não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users": {
             "post": {
                 "tags": [
@@ -553,6 +718,10 @@
         {
             "name": "Autenticação",
             "description": "APIs para autenticação de usuários"
+        },
+        {
+            "name": "Telefone",
+            "description": "Gerenciamento de telefones dos usuários"
         },
         {
             "name": "Usuários",
