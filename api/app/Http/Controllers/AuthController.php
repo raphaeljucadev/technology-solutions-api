@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * @OA\Tag(
  *     name="Autenticação",
- *     description="APIs para gerenciamento de usuários"
+ *     description="APIs para autenticação de usuários",
  * )
  */
 

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AddressController;
 
 
 
@@ -27,6 +28,14 @@ Route::prefix('api')->group(function () {
         Route::put('/users/{id}', [UserController::class, 'update']);
         //alterar senha
         Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+
+
+        //criação de rotas para endereços
+        Route::post('/endereco', [AddressController::class, 'store']);
+        Route::get('/endereco/{id}', [AddressController::class, 'show']);
+        Route::put('/endereco/{id}', [AddressController::class, 'update']);
+
+
     });
 
 
