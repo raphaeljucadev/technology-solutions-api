@@ -775,6 +775,126 @@
                 ]
             }
         },
+        "/api/convites": {
+            "post": {
+                "tags": [
+                    "Convites"
+                ],
+                "summary": "Envia um convite para um novo colaborador",
+                "description": "Enviar um convite para um novo colaborador.",
+                "operationId": "1c9d4f2360041b6b2e8c85ec1f3637c1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "colaborador@email.com"
+                                    },
+                                    "user_id": {
+                                        "description": "ID do usuário que está enviando o convite",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Convite enviado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 201
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Convite enviado com sucesso"
+                                        },
+                                        "convite": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "colaborador@email.com"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "randomToken123"
+                                                },
+                                                "enviado_por": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O e-mail já foi convidado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário sem permissão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você não tem permissão para convidar colaboradores."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/telefone": {
             "put": {
                 "tags": [
@@ -1305,6 +1425,10 @@
         {
             "name": "Colaboradores",
             "description": "Sessão para informações sobre colaboradores"
+        },
+        {
+            "name": "Convites",
+            "description": "Gerenciamento de convites para colaboradores"
         },
         {
             "name": "Telefone",

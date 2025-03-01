@@ -11,7 +11,7 @@ class Convite extends Model
 
 
 
-    protected $fillable = ['email', 'token', 'status_id, user_id,expires_at'];
+    protected $fillable = ['email', 'token', 'status_id', 'user_id','expires_at','user_id'];
 
     public function user(): BelongsTo
     {

@@ -8,6 +8,8 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\TelefoneController;
 use App\Http\Controllers\UserTypeController;
 use App\Http\Controllers\ColaboradoresController;
+use App\Http\Controllers\ConviteController;
+
 
 
 
@@ -57,6 +59,9 @@ Route::prefix('api')->group(function () {
         Route::get('/colaboradores/{id}', [ColaboradoresController::class, 'show']);
 
         Route::put('/colaboradores/{id}/perfil', [ColaboradoresController::class, 'updateUserType']);
+
+        Route::post('/convites', [ConviteController::class, 'enviarConvite']);
+
 
     });
 
