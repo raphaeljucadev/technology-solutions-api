@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\ConviteService;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
+
 
 /**
  * @OA\Tag(
@@ -73,4 +75,38 @@ class ConviteController extends Controller
 
         return response()->json($response->getData(), $response->getStatusCode());
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/convites-get/{token}",
+     *     summary="Buscar convite pelo token",
+     *     tags={"Convites"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="path",
+     *         required=true,
+     *         description="Token único do convite",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Convite encontrado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="email", type="string", example="colaborador@email.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Convite não encontrado"
+     *     )
+     * )
+     */
+    public function getInvitationByToken(string $token): JsonResponse
+    {
+        $email = $this->conviteService->findEmailByToken($token);
+
+        return response()->json(['email' => $email]);
+    }
+
 }

@@ -895,6 +895,47 @@
                 ]
             }
         },
+        "/api/convites-get/{token}": {
+            "get": {
+                "tags": [
+                    "Convites"
+                ],
+                "summary": "Buscar convite pelo token",
+                "operationId": "2fe858acad11ca56cc16a5b11373471b",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token único do convite",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convite encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "colaborador@email.com"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Convite não encontrado"
+                    }
+                }
+            }
+        },
         "/api/telefone": {
             "put": {
                 "tags": [

@@ -21,6 +21,7 @@ Route::prefix('api')->group(function () {
      //criação de rotas para usuários
     Route::post('/users', [UserController::class, 'store']);
 
+    Route::get('/convites-get/{token}', [ConviteController::class, 'getInvitationByToken']);
 
 
 
