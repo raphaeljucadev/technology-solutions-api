@@ -156,4 +156,21 @@ class ConviteService
             'data' => ['email' => $invitation->email]
         ], Response::HTTP_OK);
     }
+
+    public function listarConvites()
+{
+    // Buscando todos os convites com os seus status relacionados
+    $convites = Convite::with('status')->get();
+
+    return $convites;
+}
+
+public function listarStatusConvites()
+{
+    // Buscando todos os status de convites
+    $status = StatusConvite::all();
+
+    return $status;
+}
+
 }

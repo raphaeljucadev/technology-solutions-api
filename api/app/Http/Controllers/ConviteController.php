@@ -109,4 +109,62 @@ class ConviteController extends Controller
         return response()->json(['email' => $email]);
     }
 
+/**
+ * @OA\Get(
+ *     path="/api/convites",
+ *     summary="Listar todos os convites",
+ *     tags={"Convites"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de convites recuperada com sucesso",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="object",
+ *                 @OA\Property(property="email", type="string", example="colaborador@email.com"),
+ *                 @OA\Property(property="status", type="string", example="pendente")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+    public function listarConvites(): JsonResponse
+    {
+        $convites = $this->conviteService->listarConvites();
+        return response()->json([
+            'code' => Response::HTTP_OK,
+            'message' => 'Lista de convites recuperada com sucesso.',
+            'data' => $convites
+        ], Response::HTTP_OK);
+    }
+
+/**
+ * @OA\Get(
+ *     path="/api/status-convites",
+ *     summary="Listar todos os status de convites",
+ *     tags={"Convites"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de status recuperada com sucesso",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="object",
+ *                 @OA\Property(property="status", type="string", example="pendente"),
+ *                 @OA\Property(property="descricao", type="string", example="Convite ainda não aceito")
+ *             )
+ *         )
+ *     )
+ * )
+ */
+public function listarStatusConvites(): JsonResponse
+{
+    $statusConvites = $this->conviteService->listarStatusConvites();
+    return response()->json([
+        'code' => Response::HTTP_OK,
+        'message' => 'Lista de status de convites recuperada com sucesso.',
+        'data' => $statusConvites
+    ], Response::HTTP_OK);
+}
+
 }

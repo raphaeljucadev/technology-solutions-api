@@ -37,8 +37,6 @@ class UserController extends Controller
  *             @OA\Property(property="name", type="string", example="Maria Souza"),
  *             @OA\Property(property="cpf", type="string", example="123.456.789-00"),
  *             @OA\Property(property="email", type="string", format="email", example="maria@example.com"),
- *             @OA\Property(property="password", type="string", format="password", example="123456"),
- *             @OA\Property(property="user_type_id", type="integer", example=1)
  *         )
  *     ),
  *     @OA\Response(

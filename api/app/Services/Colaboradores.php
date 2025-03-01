@@ -69,10 +69,13 @@ class Colaboradores
         return $colaborador;
     }
 
-    public function updateUserType($userId, $newUserTypeId, $password = null)
+    public function updateUserType($userId, $newUserTypeId, $password = null,$id_user_alterar)
     {
-        // Buscar o usuário
-        $user = User::find($userId);
+        // Buscar o usuário para alterar
+        $user = User::find($id_user_alterar);
+
+        // Buscar o usuário para alterando
+        $user_atual = User::find($userId);
         if (!$user) {
             return response()->json([
                 'code' => Response::HTTP_NOT_FOUND,
@@ -81,7 +84,7 @@ class Colaboradores
         }
 
         // Buscar o tipo de usuário atual e o novo tipo
-        $currentUserType = $user->userType->name ?? null;
+        $currentUserType = $user_atual->userType->name ?? null;
         $newUserType = UserType::find($newUserTypeId);
 
         if (!$newUserType) {
@@ -127,7 +130,7 @@ class Colaboradores
 
         $user->save();
 
-        $user = User::find($userId);
+        $user = User::find($id_user_alterar);
 
 
         return response()->json([
@@ -136,6 +139,8 @@ class Colaboradores
             'user' => $user
         ], Response::HTTP_OK);
     }
+
+
 
 
 }

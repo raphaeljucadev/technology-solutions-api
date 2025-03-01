@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\Colaboradores;
+use App\Services\UserService;
+use App\Services\TelefoneService;
+use App\Services\AddressService;
 
 /**
  * @OA\Tag(
@@ -15,10 +18,16 @@ use App\Services\Colaboradores;
 class ColaboradoresController extends Controller
 {
     protected Colaboradores $colaboradorService;
+    protected $userService;
+    protected $telefoneService;
+    protected $addressService;
 
-    public function __construct(Colaboradores $colaboradorService)
+    public function __construct(Colaboradores $colaboradorService,UserService $userService, TelefoneService $telefoneService, AddressService $addressService)
     {
         $this->colaboradorService = $colaboradorService;
+        $this->userService = $userService;
+        $this->telefoneService = $telefoneService;
+        $this->addressService = $addressService;
     }
 
     /**
@@ -194,6 +203,7 @@ public function show($id)
      *         @OA\JsonContent(
      *             required={"user_type_id"},
      *             @OA\Property(property="user_type_id", type="integer", example=2),
+     *              @OA\Property(property="id_user_alterar", type="integer", example=2),
      *             @OA\Property(property="password", type="string", example="novaSenha123", description="Obrigatório para Administrador ou Gente e Cultura")
      *         )
      *     ),
@@ -244,10 +254,12 @@ public function show($id)
             'password' => 'nullable|string|min:6'
         ]);
 
-        $response = $this->colaboradorService->updateUserType($id, $request->user_type_id, $request->password);
+        $response = $this->colaboradorService->updateUserType($id, $request->user_type_id, $request->password, $request->id_user_alterar);
 
         return $response;
     }
+
+
 
 
 }

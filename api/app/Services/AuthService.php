@@ -13,6 +13,7 @@ use Laravel\Passport\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Models\Usertype;
 
 
 class AuthService
@@ -40,6 +41,17 @@ class AuthService
         );
     }
 
+    $user_type_id = $user->user_type_id;
+
+    $users_type = Usertype::where('id', $user_type_id)->first();
+
+    if ($users_type->name != 'Administrador' && $users_type->name != 'Gente e Cultura') {
+        throw new HttpResponseException(
+            response()->json(['message' => 'Você não tem permissões.'], 401)
+        );
+    }
+
+
 
     // Revogar tokens antigos
     $user->tokens()->delete();
@@ -52,6 +64,8 @@ class AuthService
 
     $token = $user->createToken('auth_token', ['*'], $client->id)->accessToken;
 
+
+
     return [
         'token' => $token,
         'user' => [
@@ -59,6 +73,8 @@ class AuthService
             'name' => $user->name,
             'cpf' => $user->cpf,
             'email' => $user->email,
+            'user_type_id' => $user->user_type_id,
+
         ]
     ];
 }
