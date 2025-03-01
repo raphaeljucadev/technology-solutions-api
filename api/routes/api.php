@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\TelefoneController;
 use App\Http\Controllers\UserTypeController;
+use App\Http\Controllers\ColaboradoresController;
 
 
 
@@ -48,6 +49,14 @@ Route::prefix('api')->group(function () {
         Route::get('/user-types/{id}', [UserTypeController::class, 'show']);
         Route::post('/user-types', [UserTypeController::class, 'store']);
 
+
+        Route::get('/colaboradores', [ColaboradoresController::class, 'index']);
+
+        Route::get('/colaboradores/search', [ColaboradoresController::class, 'search']);
+
+        Route::get('/colaboradores/{id}', [ColaboradoresController::class, 'show']);
+
+        Route::put('/colaboradores/{id}/perfil', [ColaboradoresController::class, 'updateUserType']);
 
     });
 

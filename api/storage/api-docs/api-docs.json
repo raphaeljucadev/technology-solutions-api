@@ -352,6 +352,429 @@
                 }
             }
         },
+        "/api/colaboradores": {
+            "get": {
+                "tags": [
+                    "Colaboradores"
+                ],
+                "summary": "Lista todos os colaboradores, com opção de pesquisa",
+                "description": "Listar colaboradores",
+                "operationId": "7d1660561495f330725fbb67ca85f3fb",
+                "responses": {
+                    "200": {
+                        "description": "Lista de colaboradores paginada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "João Silva"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "joao@email.com"
+                                                    },
+                                                    "cpf": {
+                                                        "type": "string",
+                                                        "example": "123.456.789-00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8000/api/colaboradores?page=1"
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8000/api/colaboradores?page=2"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 50
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/colaboradores/search": {
+            "get": {
+                "tags": [
+                    "Colaboradores"
+                ],
+                "summary": "Pesquisa colaboradores pelo nome, email ou CPF e verifica se possuem convites finalizados",
+                "description": "Pesquisar colaboradores finalizados",
+                "operationId": "da11228234d9eaf2d5b32b7fd9091498",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Nome, email ou CPF do colaborador",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "João"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de colaboradores filtrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "João Silva"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "joao@email.com"
+                                                    },
+                                                    "cpf": {
+                                                        "type": "string",
+                                                        "example": "123.456.789-00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parâmetro de pesquisa inválido"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/colaboradores/{id}": {
+            "get": {
+                "tags": [
+                    "Colaboradores"
+                ],
+                "summary": "Obtém todas as informações de um colaborador pelo ID",
+                "description": "Obter informações de um colaborador pelo ID",
+                "operationId": "96a9bb9d194cb7476b8ede533812e98b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do colaborador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do colaborador",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "João Silva"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "joao@email.com"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "example": "123.456.789-00"
+                                        },
+                                        "user_type": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Colaborador Comum"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "telefones": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "numero": {
+                                                        "type": "string",
+                                                        "example": "(11) 91234-5678"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "endereco": {
+                                            "properties": {
+                                                "logradouro": {
+                                                    "type": "string",
+                                                    "example": "Rua Exemplo, 123"
+                                                },
+                                                "cidade": {
+                                                    "type": "string",
+                                                    "example": "São Paulo"
+                                                },
+                                                "estado": {
+                                                    "type": "string",
+                                                    "example": "SP"
+                                                },
+                                                "cep": {
+                                                    "type": "string",
+                                                    "example": "01000-000"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Colaborador não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/colaboradores/{id}/perfil": {
+            "put": {
+                "tags": [
+                    "Colaboradores"
+                ],
+                "summary": "Atualiza o tipo de perfil do colaborador",
+                "description": "Atualizar perfil do colaborador",
+                "operationId": "f69240e6579d7146aa43e81b8bc4bc37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do colaborador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_type_id"
+                                ],
+                                "properties": {
+                                    "user_type_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "password": {
+                                        "description": "Obrigatório para Administrador ou Gente e Cultura",
+                                        "type": "string",
+                                        "example": "novaSenha123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Perfil atualizado com sucesso"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "joao@email.com"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Senha obrigatória para este tipo de perfil"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário sem permissão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você não tem permissão para essa alteração"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/telefone": {
             "put": {
                 "tags": [
@@ -878,6 +1301,10 @@
         {
             "name": "Autenticação",
             "description": "APIs para autenticação de usuários"
+        },
+        {
+            "name": "Colaboradores",
+            "description": "Sessão para informações sobre colaboradores"
         },
         {
             "name": "Telefone",
