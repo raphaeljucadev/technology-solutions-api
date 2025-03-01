@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->unsignedBigInteger('user_type_id')->nullable();
             $table->foreign('user_type_id')->references('id')->on('user_types')->onDelete('set null');
             $table->string('cpf')->unique();

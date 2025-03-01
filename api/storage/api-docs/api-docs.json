@@ -654,6 +654,10 @@
                                         "type": "integer",
                                         "example": 2
                                     },
+                                    "id_user_alterar": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
                                     "password": {
                                         "description": "Obrigatório para Administrador ou Gente e Cultura",
                                         "type": "string",
@@ -776,6 +780,38 @@
             }
         },
         "/api/convites": {
+            "get": {
+                "tags": [
+                    "Convites"
+                ],
+                "summary": "Listar todos os convites",
+                "operationId": "6a234a88bdb748331660765041b1008f",
+                "responses": {
+                    "200": {
+                        "description": "Lista de convites recuperada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "email": {
+                                                "type": "string",
+                                                "example": "colaborador@email.com"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "pendente"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Convites"
@@ -893,6 +929,81 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/convites-get/{token}": {
+            "get": {
+                "tags": [
+                    "Convites"
+                ],
+                "summary": "Buscar convite pelo token",
+                "operationId": "2fe858acad11ca56cc16a5b11373471b",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token único do convite",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convite encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "colaborador@email.com"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Convite não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/status-convites": {
+            "get": {
+                "tags": [
+                    "Convites"
+                ],
+                "summary": "Listar todos os status de convites",
+                "operationId": "b92ecfa0d4f6e0478cf4b880d895176f",
+                "responses": {
+                    "200": {
+                        "description": "Lista de status recuperada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "status": {
+                                                "type": "string",
+                                                "example": "pendente"
+                                            },
+                                            "descricao": {
+                                                "type": "string",
+                                                "example": "Convite ainda não aceito"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/telefone": {
@@ -1093,15 +1204,6 @@
                                         "type": "string",
                                         "format": "email",
                                         "example": "maria@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "123456"
-                                    },
-                                    "user_type_id": {
-                                        "type": "integer",
-                                        "example": 1
                                     }
                                 },
                                 "type": "object"

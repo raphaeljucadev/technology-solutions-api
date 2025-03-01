@@ -21,6 +21,7 @@ Route::prefix('api')->group(function () {
      //criação de rotas para usuários
     Route::post('/users', [UserController::class, 'store']);
 
+    Route::get('/convites-get/{token}', [ConviteController::class, 'getInvitationByToken']);
 
 
 
@@ -60,9 +61,11 @@ Route::prefix('api')->group(function () {
 
         Route::put('/colaboradores/{id}/perfil', [ColaboradoresController::class, 'updateUserType']);
 
+
         Route::post('/convites', [ConviteController::class, 'enviarConvite']);
 
-
+        Route::get('/convites', [ConviteController::class, 'listarConvites']);
+        Route::get('/status-convites', [ConviteController::class, 'listarStatusConvites']);
     });
 
 
