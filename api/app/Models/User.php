@@ -6,11 +6,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens,HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_type_id',
+        'cpf',
     ];
 
     /**
@@ -45,4 +51,33 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function convites()
+{
+    return $this->hasMany(Convite::class, 'user_id');
+}
+ /**
+     * Relacionamento com UserType (Cada usuário pertence a um tipo de usuário)
+     */
+    public function userType(): BelongsTo
+    {
+        return $this->belongsTo(UserType::class, 'user_type_id');
+    }
+
+    /**
+     * Relacionamento com Telefone (Um usuário pode ter vários telefones)
+     */
+    public function telefones(): HasMany
+    {
+        return $this->hasMany(Telefone::class, 'user_id');
+    }
+
+    /**
+     * Relacionamento com Address (Um usuário tem um endereço)
+     */
+    public function endereco(): HasOne
+    {
+        return $this->hasOne(Address::class, 'user_id');
+    }
+
 }

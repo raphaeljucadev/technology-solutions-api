@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 //controller para autenticação
 
+
+
+
 /**
- * @OA\Info(
- *      title="API Technology Solutions",
- *      version="1.0.0",
- *      description="Documentação da API de onboarding de colaboradores",
- *      @OA\Contact(
- *          email="suporte@empresa.com"
- *      )
+ * @OA\Tag(
+ *     name="Autenticação",
+ *     description="APIs para autenticação de usuários",
  * )
  */
 
@@ -65,12 +64,7 @@ class AuthController extends Controller
     //método para login
     public function login(Request $request)
     {
-        $request->validate([
-            'cpf' => 'required|string|size:14',
-            'password' => 'required|string|min:8',
-        ]);
-
-        try {
+                try {
             $data = $this->authService->login($request->cpf, $request->password);
             return response()->json($data);
         } catch (ValidationException $e) {
@@ -84,7 +78,7 @@ class AuthController extends Controller
  *      tags={"Autenticação"},
  *      summary="Faz logout do usuário",
  *      description="Revoga o token de autenticação do usuário",
- *      security={{"passport":{}}},
+ *     security={{"bearerAuth":{}}},
  *      @OA\Response(
  *          response=200,
  *          description="Logout realizado com sucesso",
@@ -104,4 +98,34 @@ public function logout()
 
     return response()->json(['message' => 'Logout realizado com sucesso']);
 }
+ /**
+     * @OA\Post(
+     *      path="/api/password/reset",
+     *      tags={"Autenticação"},
+     *      summary="Redefinir senha",
+     *      description="Permite redefinir a senha de um usuário com um CPF válido",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"cpf", "password"},
+     *              @OA\Property(property="cpf", type="string", example="529.982.247-25"),
+     *              @OA\Property(property="password", type="string", format="password", example="NovaSenha@123")
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Senha alterada com sucesso",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Senha alterada com sucesso.")
+     *          )
+     *      ),
+     *      @OA\Response(response=422, description="Erro na validação dos dados"),
+     *      @OA\Response(response=404, description="Usuário não encontrado"),
+     * )
+     */
+    public function resetPassword(Request $request)
+    {
+        return $this->authService->resetPassword($request);
+    }
+
 }
