@@ -114,9 +114,9 @@ class ConviteService
 
         if (!$invitation) {
             return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
+                'code' => 400,
                 'message' => 'Convite não encontrado.'
-            ], Response::HTTP_NOT_FOUND);
+            ], 401);
         }
 
         // Buscar status "Em Aberto" e "Vencido"
@@ -125,17 +125,17 @@ class ConviteService
 
         if (!$statusEmAberto || !$statusVencido) {
             return response()->json([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'code' => 401,
                 'message' => 'Erro interno: Status de convite não configurado corretamente.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 401);
         }
 
         // Verificar se o convite ainda está "Em Aberto"
         if ($invitation->status_id !== $statusEmAberto->id) {
             return response()->json([
-                'code' => Response::HTTP_BAD_REQUEST,
+                'code' => 401,
                 'message' => 'Convite não está mais disponível.'
-            ], Response::HTTP_BAD_REQUEST);
+            ], 401);
         }
 
         // Verificar se o convite já expirou
@@ -144,17 +144,17 @@ class ConviteService
             $invitation->update(['status_id' => $statusVencido->id]);
 
             return response()->json([
-                'code' => Response::HTTP_GONE, // 410 - Gone (Recurso expirado)
+                'code' => 410, // 410 - Gone (Recurso expirado)
                 'message' => 'Link expirado. Solicite outro convite.'
-            ], Response::HTTP_GONE);
+            ],410);
         }
 
         // Retornar o e-mail se estiver tudo certo
         return response()->json([
-            'code' => Response::HTTP_OK,
+            'code' => 200,
             'message' => 'Convite válido.',
             'data' => ['email' => $invitation->email]
-        ], Response::HTTP_OK);
+        ],200);
     }
 
     public function listarConvites()

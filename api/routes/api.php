@@ -20,6 +20,9 @@ Route::prefix('api')->group(function () {
 
      //criação de rotas para usuários
     Route::post('/users', [UserController::class, 'store']);
+    Route::post('/endereco', [AddressController::class, 'store']);
+    Route::post('/telefone', [TelefoneController::class, 'store']);
+
 
     Route::get('/convites-get/{token}', [ConviteController::class, 'getInvitationByToken']);
 
@@ -37,13 +40,11 @@ Route::prefix('api')->group(function () {
 
 
         //criação de rotas para endereços
-        Route::post('/endereco', [AddressController::class, 'store']);
         Route::get('/endereco/{id}', [AddressController::class, 'show']);
         Route::put('/endereco/{id}', [AddressController::class, 'update']);
 
         //criação de rotas para telefones
 
-        Route::post('/telefone', [TelefoneController::class, 'store']);
         Route::get('/telefone/{id}', [TelefoneController::class, 'show']);
         Route::put('/telefone', [TelefoneController::class, 'update']);
 

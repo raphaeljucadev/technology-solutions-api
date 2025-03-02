@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\StrongPasswordRule;
+use Illuminate\Support\Facades\Log;
+
 
 class Colaboradores
 {   public function getColaboradoresFinalizados()
     {
+
+
         // Buscar o ID do status "Finalizado" na tabela status_convites
         $statusFinalizado = StatusConvite::where('name', 'Finalizado')->first();
 
@@ -23,13 +27,13 @@ class Colaboradores
         }
 
         // Buscar todos os convites com status "Finalizado"
-        $userIds = Convite::where('status_id', $statusFinalizado->id)
-                          ->pluck('user_id'); // Pegamos apenas os IDs dos usuários
+        $email = Convite::where('status_id', $statusFinalizado->id)
+                          ->pluck('email'); // Pegamos apenas os IDs dos usuários
 
         // Buscar os usuários com esses IDs
-        return User::whereIn('id', $userIds)
-                   ->orderBy('name', 'asc')
-                   ->paginate(10);
+       return User::whereIn('email', $email)
+          ->orderBy('name', 'asc')
+                  ->paginate(10);
     }
 
 
@@ -69,78 +73,86 @@ class Colaboradores
         return $colaborador;
     }
 
-    public function updateUserType($userId, $newUserTypeId, $password = null,$id_user_alterar)
-    {
-        // Buscar o usuário para alterar
-        $user = User::find($id_user_alterar);
+    public function updateUserType($userId, $newUserTypeId, $password = null, $id_user_alterar)
+{
+    // Buscar o usuário para alterar
+    $user = User::find($id_user_alterar);
 
-        // Buscar o usuário para alterando
-        $user_atual = User::find($userId);
-        if (!$user) {
-            return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
-                'message' => 'Usuário não encontrado'
-            ], Response::HTTP_NOT_FOUND);
-        }
-
-        // Buscar o tipo de usuário atual e o novo tipo
-        $currentUserType = $user_atual->userType->name ?? null;
-        $newUserType = UserType::find($newUserTypeId);
-
-        if (!$newUserType) {
-            return response()->json([
-                'code' => Response::HTTP_BAD_REQUEST,
-                'message' => 'Tipo de usuário inválido'
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        // Obter regras de permissão do arquivo de configuração
-        $permissoes = Config::get('permissions.user_type_changes', []);
-
-        // Verificar se o usuário tem permissão para alterar para o novo perfil
-        if (!isset($permissoes[$currentUserType]) || !in_array($newUserType->name, $permissoes[$currentUserType])) {
-            return response()->json([
-                'code' => Response::HTTP_FORBIDDEN,
-                'message' => 'Você não tem permissão para essa alteração'
-            ], Response::HTTP_FORBIDDEN);
-        }
-
-        // Se o novo perfil for "Administrador" ou "Gente e Cultura", a senha é obrigatória
-        if (in_array($newUserType->name, ['Administrador', 'Gente e Cultura'])) {
-            // Validação da senha com a regra StrongPasswordRule
-            $validator = Validator::make(['password' => $password], [
-                'password' => ['required', 'string', new StrongPasswordRule()]
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => $validator->errors()->first('password')
-                ], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
-        // Atualizar o tipo de usuário
-        $user->user_type_id = $newUserTypeId;
-
-        // Se uma senha foi fornecida, atualizar também
-        if ($password) {
-            $user->password = Hash::make($password);
-        }
-
-        $user->save();
-
-        $user = User::find($id_user_alterar);
-
-
+    // Buscar o usuário para alterando
+    $user_atual = User::find($userId);
+    if (!$user) {
         return response()->json([
-            'code' => Response::HTTP_OK,
-            'message' => 'Perfil atualizado com sucesso',
-            'user' => $user
-        ], Response::HTTP_OK);
+            'code' => Response::HTTP_NOT_FOUND,
+            'message' => 'Usuário não encontrado'
+        ], Response::HTTP_NOT_FOUND);
     }
 
+    // Buscar o tipo de usuário atual e o novo tipo
+    $currentUserType = $user_atual->userType->name ?? null;
+    $newUserType = UserType::find($newUserTypeId);
 
+    if (!$newUserType) {
+        return response()->json([
+            'code' => Response::HTTP_BAD_REQUEST,
+            'message' => 'Tipo de usuário inválido'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    // Obter regras de permissão do arquivo de configuração
+    $permissoes = Config::get('permissions.user_type_changes', []);
+
+// Regra padrão: nenhum perfil pode alterar nada
+if ($currentUserType !== 'Administrador' && $currentUserType !== 'Gente e Cultura') {
+    return response()->json([
+        'code' => Response::HTTP_FORBIDDEN,
+        'message' => 'Você não tem permissão para alterar o tipo de usuário.'
+    ], Response::HTTP_FORBIDDEN);
+}
+
+
+if ($currentUserType === 'Gente e Cultura') {
+    // Gente e Cultura pode alterar entre: Gente e Cultura, Colaborador Comum
+    if ($newUserType->name == 'Administrador' ) {
+        return response()->json([
+            'code' => Response::HTTP_FORBIDDEN,
+            'message' => 'Você não tem permissão para alterar para este tipo de usuário.'
+        ], Response::HTTP_FORBIDDEN);
+    }
+}
+
+    // Se o novo perfil for "Administrador" ou "Gente e Cultura", a senha é obrigatória
+    if (in_array($newUserType->name, ['Administrador', 'Gente e Cultura'])) {
+        // Validação da senha com a regra StrongPasswordRule
+        $validator = Validator::make(['password' => $password], [
+            'password' => ['required', 'string', new StrongPasswordRule()]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'message' => $validator->errors()->first('password')
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    // Atualizar o tipo de usuário
+    $user->user_type_id = $newUserTypeId;
+
+    // Se uma senha foi fornecida, atualizar também
+    if ($password) {
+        $user->password = Hash::make($password);
+    }
+
+    $user->save();
+
+    $user = User::find($id_user_alterar);
+
+    return response()->json([
+        'code' => Response::HTTP_OK,
+        'message' => 'Perfil atualizado com sucesso',
+        'user' => $user
+    ], Response::HTTP_OK);
+}
 
 
 }
