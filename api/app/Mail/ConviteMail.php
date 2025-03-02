@@ -38,7 +38,7 @@ class ConviteMail extends Mailable
         return new \Illuminate\Mail\Mailables\Content(
             view: 'emails.convite', // Define a view do e-mail
             with: [
-                'link' => url('http://angular-app:4200/cadastro?token=' . $this->convite->token),
+                'link' => url('localhost:4200/cadastro?token=' . $this->convite->token),
                 'email' => $this->convite->email
             ]
         );
