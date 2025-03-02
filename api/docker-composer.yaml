@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./technology-solutions-api/api
+    image: laravel-app
+    container_name: laravel-api
+    volumes:
+      - ./technology-solutions-api/api:/var/www
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "9000:80"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - REDIS_HOST=redis
+
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: laravel
+    networks:
+      - mynetwork
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./technology_solutions_db.sql:/docker-entrypoint-initdb.d/technology_solutions_db.sql
+    command: --init-command="source /docker-entrypoint-initdb.d/technology_solutions_db.sql"
+
+  redis:
+    image: redis:alpine
+    container_name: redis-laravel
+    networks:
+      - mynetwork
+    ports:
+      - "6379:6379"
+
+  scheduler:
+    image: laravel-app
+    container_name: laravel-scheduler
+    command: php /var/www/artisan schedule:work
+    volumes:
+      - ./technology-solutions-api/api:/var/www
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - mynetwork
+
+  queue:
+    image: laravel-app
+    container_name: laravel-queue
+    command: php /var/www/artisan queue:work --queue=convites
+    volumes:
+      - ./technology-solutions-api/api:/var/www
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
