@@ -1,7 +1,7 @@
-# Imagem base
+# Usar a imagem do PHP 8.2 com FPM como base
 FROM php:8.2-fpm
 
-# Instalação das dependências do sistema
+# Instalar dependências do sistema e o Nginx
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -10,35 +10,34 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     git \
     unzip \
-    && rm -rf /var/lib/apt/lists/*
+    nginx && rm -rf /var/lib/apt/lists/*
 
-# Instalação das extensões PHP necessárias
+# Instalar as extensões PHP necessárias
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql
 
-# Instalação do Composer (gerenciador de dependências PHP)
+# Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Definindo o diretório de trabalho
-WORKDIR /var/www
+# Copiar a configuração do Nginx
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copiando todos os arquivos do projeto Laravel para o container
+# Copiar os arquivos do Laravel para dentro do contêiner
+WORKDIR /var/www
 COPY . /var/www
 
-# Instalando as dependências do Laravel
+# Ajustar permissões para o Laravel
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+# Instalar dependências do Laravel
 RUN composer install --optimize-autoloader --no-dev
 
-# Gerando a chave do Laravel
+# Gerar chave do Laravel
 RUN php artisan key:generate
 
-# Configurando permissões para o diretório de armazenamento e cache
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Expor a porta onde o Laravel vai rodar
+EXPOSE 9000
 
-# Importando a estrutura e dados do banco de dados MySQL
-COPY technology_solutions_db.sql /docker-entrypoint-initdb.d/
-
-# Expondo a porta onde o Laravel vai rodar
-EXPOSE 80
-
-# Comando para iniciar o servidor PHP embutido do Laravel
-CMD ["php-fpm"]
+# Comando para iniciar o PHP-FPM e o Nginx
+CMD php-fpm
